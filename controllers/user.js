@@ -63,18 +63,18 @@ export const loginUser = async (req, res) => {
     }
   
     // generating token
-    let authToken = jwt.sign(
+    let token = jwt.sign(
       { email: user.email, id: user._id },
       process.env.AUTH_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "100h" }
     );
   
     // send json response
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {message: "successfully logged in",
             email: req.body.email},
-      token: authToken,
+      authtoken: token,
     });
   };
   

@@ -1,10 +1,6 @@
-import pkg from "http-errors";
 import mongoose from "mongoose";
+import { qn, Quiz } from "../models/quiz.js";
 const Mongoose = mongoose;
-
-
-import { qn } from "../models/quiz.js";
-
 
 export const createQn = async (req, res) => {
   const question = req.body.question;
@@ -20,11 +16,11 @@ export const createQn = async (req, res) => {
     });
   }
 
-
   try {
     const Obj = { ...req.body, isAnswered: "false" };
-    const question = await qn.create(Obj);
     console.log(req.body);
+    const question = await qn.create(Obj);
+
     res.status(201).json({
       success: true,
       data: { message: "question created successfully" },
@@ -39,8 +35,6 @@ export const createQn = async (req, res) => {
     });
   }
 };
-
-
 
 export const getQnById = async (req, res) => {
   if (!req.params.id || !Mongoose.isValidObjectId(req.params.id)) {
@@ -76,9 +70,7 @@ export const viewAllQns = async (req, res) => {
   const questions = await qn.find();
   return res.status(200).json({
     success: true,
-    data: {
-      data: questions,
-    },
+    data: questions,
   });
 };
 
@@ -158,6 +150,28 @@ export const deleteQn = async (req, res) => {
     success: true,
     data: {
       message: "question deleted successfully",
+    },
+  });
+};
+
+export const assignQuestions = async (req, res) => {
+  const { questions } = req.body;
+  const id = req.params.id;
+
+  const quiz = await Quiz.findByIdAndUpdate(id, { questions }, { new: true });
+  if (!quiz) {
+    return res.status(400).json({
+      success: false,
+      data: {
+        message: "No quiz found",
+      },
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      message: "questions  assigned succesfully",
     },
   });
 };

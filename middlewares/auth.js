@@ -8,10 +8,10 @@ export function authenticate(req, res, next) {
     });
   }
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    console.log(token);
+    const authtoken = req.headers.authorization.split(" ")[1];
+    console.log(authtoken);
 
-    jwt.verify(token, process.env.AUTH_KEY, (err, decoded) => {
+    jwt.verify(authtoken, process.env.AUTH_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({
           message: "invalid or expire token",
